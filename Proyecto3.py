@@ -32,7 +32,7 @@ class Pokemon:
 
     def descansar(self):
         self.ep = self.ep_max
-        print(f"\n✨ {self.nombre} ha descansado y recuperado su energía.")
+        print(f"\n{self.nombre} ha descansado y recuperado su energía.")
 
 # --- Aplicación de Herencia para ataques específicos ---
 
