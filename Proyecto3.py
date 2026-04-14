@@ -11,8 +11,7 @@ except ImportError:
 
 
 class Pokemon:
-    """Clase base que define la estructura principal y el encapsulamiento."""
-
+  
     def __init__(self, nombre, tipo, hp_max, ep_max):
 
         self.nombre = nombre
@@ -32,7 +31,7 @@ class Pokemon:
 
     @hp.setter
     def hp(self, valor):
-        """Setter para la vida con lógica de validación (CRITERIO 7)."""
+ 
         if valor < 0:
 
             self.__hp = 0
@@ -43,12 +42,12 @@ class Pokemon:
 
     @property
     def ep(self):
-        """Getter para la energía actual."""
+
         return self.__ep
 
     @ep.setter
     def ep(self, valor):
-        """Setter para la energía."""
+
         if valor < 0:
             self.__ep = 0
         elif valor > self.__ep_max:
@@ -68,7 +67,7 @@ class Pokemon:
         return self.hp > 0
 
     def mostrar_interfaz(self, es_rival=False):
-        """Dibuja la interfaz visual de salud y energía en consola."""
+   
         ancho = 40
         tag = "[RIVAL]" if es_rival else "[TU POKÉMON]"
         
@@ -99,7 +98,7 @@ class Pokemon:
 
 
 class PokemonFuego(Pokemon):
-    """Subclase para Pokémon tipo Fuego."""
+
 
     def atacar(self, rival):
         costo = 20
@@ -127,7 +126,7 @@ class PokemonFuego(Pokemon):
             print(f"\n{self.nombre} no tiene suficiente energía para atacar.")
 
 class PokemonAgua(Pokemon):
-    """Subclase para Pokémon tipo Agua."""
+
     def atacar(self, rival):
         costo = 25
         danio_base = 35
@@ -177,7 +176,7 @@ class PokemonPlanta(Pokemon):
             print(f"\n {self.nombre} no tiene suficiente energía para atacar.")
 
 class PokemonElectrico(Pokemon):
-    """Subclase para Pokémon tipo Eléctrico."""
+  
     def atacar(self, rival):
         costo = 20
         danio_base = 30
