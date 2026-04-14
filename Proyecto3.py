@@ -7,7 +7,6 @@ try:
     from pokedex import CATALOGO_POKEMON, mostrar_catalogo_disponible
 except ImportError:
     print("\nERROR CRÍTICO: No se encontró el archivo 'pokedex.py'.")
-    print("Asegúrese de que el archivo del profesor esté en la misma carpeta.")
     exit()
 
 
