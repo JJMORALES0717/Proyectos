@@ -1,55 +1,116 @@
-class PlantaEspacial:
-    def __init__(self, nombre, especie):
-        """Constructor: Recibe nombre y especie; fija hidratación, salud y estado[cite: 63, 64]."""
+#==========================================================================================================
+# ====================================================================
+# ARCHIVO PROVISTO POR EL PROFESOR: pokedex.py
+# ====================================================================
+# Este archivo simula una base de datos. Contiene la información en crudo
+# de los Pokémon disponibles. Usted debe importar este catálogo en su main.py
+# y utilizar estos datos para instanciar sus objetos.
+# ====================================================================
+
+CATALOGO_POKEMON = {
+    "1": {"tipo": "Fuego", "nombre": "Charmander", "hp_maximo": 100, "energia_maxima": 50},
+    "2": {"tipo": "Fuego", "nombre": "Vulpix", "hp_maximo": 90, "energia_maxima": 60},
+    "3": {"tipo": "Agua", "nombre": "Squirtle", "hp_maximo": 110, "energia_maxima": 45},
+    "4": {"tipo": "Agua", "nombre": "Psyduck", "hp_maximo": 95, "energia_maxima": 55},
+    "5": {"tipo": "Planta", "nombre": "Bulbasaur", "hp_maximo": 105, "energia_maxima": 50},
+    "6": {"tipo": "Planta", "nombre": "Oddish", "hp_maximo": 90, "energia_maxima": 60},
+    "7": {"tipo": "Electrico", "nombre": "Pikachu", "hp_maximo": 80, "energia_maxima": 70},
+    "8": {"tipo": "Electrico", "nombre": "Magnemite", "hp_maximo": 75, "energia_maxima": 80}
+}
+
+def mostrar_catalogo_disponible():
+    """
+    Imprime en la consola el catálogo de Pokémon disponibles de forma tabulada.
+    """
+    print("\n" + "="*45)
+    print("         CATÁLOGO POKÉMON OFICIAL")
+    print("="*45)
+    
+    for clave, datos in CATALOGO_POKEMON.items():
+        print(f"[{clave}] {datos['nombre']} | Tipo: {datos['tipo']} | HP: {datos['hp_maximo']} | EP: {datos['energia_maxima']}")
+    
+    print("="*45 + "\n")
+
+# ====================================================================
+# SISTEMA POKÉMON 
+# ====================================================================
+
+import random  
+try:
+    from pokedex import CATALOGO_POKEMON, mostrar_catalogo_disponible
+except ImportError:
+    print("\n[!] ERROR CRÍTICO: No se encontró el archivo 'pokedex.py'.")
+    print("Asegúrese de que el archivo del profesor esté en la misma carpeta.")
+    exit()
+
+
+class Pokemon:
+    """Clase base que define la estructura principal y el encapsulamiento."""
+
+    def __init__(self, nombre, tipo, hp_max, ep_max):
+
         self.nombre = nombre
-        self.especie = especie
-        self.hidratacion = 100
-        self.salud = 100
-        self.estado = "Saludable"
+        self.tipo = tipo
 
-    def regar(self):
-        """Suma 15 de hidratación sin exceder 100. No funciona si está marchita[cite: 68, 72]."""
-        if self.estado == "Marchita":
-            print(f"\n[ERROR: No se puede regar. {self.nombre} está marchita].")
-            return
+        self.__hp_max = hp_max
+        self.__ep_max = ep_max
+
+        self.hp = hp_max
+        self.ep = ep_max
+
+
+    @property
+    def hp(self):
+       
+        return self.__hp
+
+    @hp.setter
+    def hp(self, valor):
+       
+        if valor < 0:
+
+            self.__hp = 0
+        elif valor > self.__hp_max:
+            self.__hp = self.__hp_max
+        else:
+            self.__hp = valor
+
+    @property
+    def ep(self):
+       
+        return self.__ep
+
+    @ep.setter
+    def ep(self, valor):
         
-        self.hidratacion += 15
-        if self.hidratacion > 100: self.hidratacion = 100
-        print(f"\nSuministrando agua... Hidratación actual: {self.hidratacion}%.")
+        if valor < 0:
+            self.__ep = 0
+        elif valor > self.__ep_max:
+            self.__ep = self.__ep_max
+        else:
+            self.__ep = valor
 
-    def pasar_dia(self):
-        """Reduce hidratación en 20. Si es < 30, resta 40 de salud[cite: 69, 70]."""
-        if self.estado == "Marchita": return
+    @property
+    def hp_max(self): return self.__hp_max
+
+    @property
+    def ep_max(self): return self.__ep_max
+
+
+    def esta_con_vida(self):
+        """Retorna True si el Pokémon tiene HP mayor a 0."""
+        return self.hp > 0
+
+    def mostrar_interfaz(self, es_rival=False):
+        """Dibuja la interfaz visual de salud y energía en consola."""
+        ancho = 40
+        tag = "[RIVAL]" if es_rival else "[TU POKÉMON]"
         
-        self.hidratacion -= 20
-        if self.hidratacion < 0: self.hidratacion = 0
-        print(f"\nHa pasado un día en Marte. La hidratación bajó a {self.hidratacion}%.")
+        def generar_barra(actual, maximo, color_bloque="▰"):
+            if maximo == 0: return "▱" * 10
+            bloques = int((actual / maximo) * 10)
+            return color_bloque * bloques + "▱" * (10 - bloques)
 
-        if self.hidratacion < 30:
-            self.salud -= 40
-            print(f"¡ALERTA! Hidratación crítica. La salud de {self.nombre} ha sufrido daños.")
+        barra_hp = generar_barra(self.hp, self.hp_max)
+        barra_ep = generar_barra(self.ep, self.ep_max)
         
-        if self.salud <= 0:
-            self.salud = 0
-            self.estado = "Marchita"
-            print(f"Trágico: {self.nombre} se ha marchitado.")
-
-    def reporte(self):
-        """Informa el estado detallado tras cada acción[cite: 75]."""
-        print(f"\nREPORTE DE BIO-MONITOR: {self.nombre}")
-        print(f"Estado: {self.estado} | Hidratación: {self.hidratacion}% | Salud: {self.salud}%")
-
-print(">>> INICIANDO SISTEMA DE BIO-INGENIERÍA ARES-1 <<<")
-n_p = input("Nombre de la planta: ")
-e_p = input("Especie de la planta: ")
-mi_planta = PlantaEspacial(n_p, e_p)
-
-while True:
-    mi_planta.reporte()
-    print("-" * 30)
-    print("1. Regar | 2. Dejar pasar día | 3. Salir")
-    op = input("Seleccione acción: ")
-
-    if op == "1": mi_planta.regar()
-    elif op == "2": mi_planta.pasar_dia()
-    elif op == "3": break
