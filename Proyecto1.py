@@ -1,53 +1,52 @@
-class DronVigilancia:
-    def __init__(self, nombre, modelo):
-        """Constructor: Solicita nombre y modelo, fija batería al 100% y estado en Tierra[cite: 12, 13]."""
+# ====================================================================
+# SISTEMA POKÉMON 
+# ====================================================================
+
+import random  
+try:
+    from pokedex import CATALOGO_POKEMON, mostrar_catalogo_disponible
+except ImportError:
+    print("\n[!] ERROR CRÍTICO: No se encontró el archivo 'pokedex.py'.")
+    print("Asegúrese de que el archivo del profesor esté en la misma carpeta.")
+    exit()
+
+
+class Pokemon:
+    """Clase base que define la estructura principal y el encapsulamiento."""
+
+    def __init__(self, nombre, tipo, hp_max, ep_max):
+
         self.nombre = nombre
-        self.modelo = modelo
-        self.bateria = 100
-        self.estado_vuelo = "En Tierra"
+        self.tipo = tipo
 
-    def despegar(self):
-        """Valida batería mínima de 25% para cambiar estado a En Vuelo[cite: 18, 19]."""
-        if self.bateria >= 25:
-            self.estado_vuelo = "En Vuelo"
-            print(f"\n¡Despegue exitoso! El dron {self.nombre} ahora está en el aire.")
+        self.__hp_max = hp_max
+        self.__ep_max = ep_max
+
+        self.hp = hp_max
+        self.ep = ep_max
+
+
+    @property
+    def hp(self):
+       
+        return self.__hp
+
+    @hp.setter
+    def hp(self, valor):
+       
+        if valor < 0:
+
+            self.__hp = 0
+        elif valor > self.__hp_max:
+            self.__hp = self.__hp_max
         else:
-            print(f"\n[ERROR: Batería insuficiente ({self.bateria}%). Requiere 25%].")
+            self.__hp = valor
 
-    def patrullar(self):
-        """Consume 30% de energía. Si baja de 10%, aterriza automáticamente[cite: 20, 21, 22]."""
-        if self.estado_vuelo == "En Vuelo":
-            self.bateria -= 30
-            if self.bateria < 0: self.bateria = 0
-            print(f"\nPatrullaje completado. Consumo: 30%. Batería restante: {self.bateria}%.")
-            
-            if self.bateria < 10:
-                self.estado_vuelo = "En Tierra"
-                print("¡ALERTA! Batería en nivel crítico. Aterrizando automáticamente por seguridad.")
-        else:
-            print("\n[ERROR: El dron no puede patrullar si aún está en tierra].")
+    @property
+    def ep(self):
+       
+        return self.__ep
 
-    def recargar(self):
-        """Restaura batería al 100% solo si está en Tierra[cite: 24]."""
-        if self.estado_vuelo == "En Tierra":
-            self.bateria = 100
-            print(f"\nRecarga finalizada. {self.nombre} está al 100% de energía.")
-        else:
-            print("\n[ERROR: El dron debe estar en tierra para recargar].")
-
-print(">>> INICIANDO SISTEMA SKYWATCH <<<")
-n = input("Ingrese nombre del dron: ")
-m = input("Ingrese modelo del dron: ")
-dron = DronVigilancia(n, m)
-
-while True:
-    print(f"\nESTADO ACTUAL: {dron.nombre} [{dron.modelo}]")
-    print(f"Batería: {dron.bateria}% | Estado: {dron.estado_vuelo}")
-    print("-" * 30)
-    print("1. Despegar | 2. Patrullar | 3. Recargar | 4. Salir")
-    opcion = input("Seleccione acción: ")
-
-    if opcion == "1": dron.despegar()
-    elif opcion == "2": dron.patrullar()
-    elif opcion == "3": dron.recargar()
-    elif opcion == "4": break
+    @ep.setter
+    def ep(self, valor):
+        
